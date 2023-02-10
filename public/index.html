@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stickermule Deal DB</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <style>
+        .unselectable {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .card {
+            margin: 0px auto;
+            width: 400px;
+            max-width: 100%;
+            height: 300px;
+            background: #161f27;
+            border-radius: 6px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .card button {
+            margin-top: 30px;
+        }
+
+        .card.loading {
+            font-family: 'Flow Circular';
+        }
+
+        .card.loading h1, .card.loading h2, .card.loading span, .card.loading p {
+            opacity: 0.3;
+        }
+
+        .card.loading button {
+            
+        }
+    </style>
+    <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/dark.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Flow+Circular&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100&display=block" rel="stylesheet">
+</head>
+<body>
+    <h1>Stickermule Deal DB</h1>
+    <p>A collection of Stickermule deals</p>
+    <hr />
+
+    <h2>Current Deal</h2>
+
+    <div class="card loading">
+        <h1 id="title">$29 for 50</h1>
+        <h2 id="subtitle">Custom 1.5\" × 1.5\" pins</h2>
+        <p id="description">Normally $77. Free shipping.</p>
+        <a target="_blank"><button disabled>
+            <span>Use Deal</span>
+        </button></a>
+    </div>
+
+    <h2>API</h2>
+    <h3>List all deals</h3>
+    <code class="unselectable" style="background: rgb(35, 74, 230); color: white;">GET</code><span class="unselectable"> </span><code style="color: white;">https://stickermule.vercel.app/all</code>
+
+    <pre><code style="background: #161f27;">[
+    {
+        "id": "957b5313",
+        "found_at": "2023-02-10T02:50:04.058987+00:00",
+        "link": "https://stickermule.com/deals/957b5313",
+        "title": "$29 for 50",
+        "subtitle": "Custom 1.5\" × 1.5\" pins",
+        "description": "Normally $77. Free shipping.",
+        "product": "https://www.stickermule.com/products/custom-pins"
+    }
+
+    ...
+]</code></pre>
+
+    <h3>List the current deal</h3>
+    <code class="unselectable" style="background: rgb(35, 74, 230); color: white;">GET</code><span class="unselectable"> </span><code style="color: white;">https://stickermule.vercel.app/current</code>
+
+    <pre><code style="background: #161f27;">{
+    "new": false,
+    "deal": {
+        "id": "957b5313",
+        "found_at": "2023-02-10T02:50:04.058987+00:00",
+        "link": "https://stickermule.com/deals/957b5313",
+        "title": "$29 for 50",
+        "subtitle": "Custom 1.5\" × 1.5\" pins",
+        "description": "Normally $77. Free shipping.",
+        "product": "https://www.stickermule.com/products/custom-pins"
+    }
+}</code></pre>
+
+    <script>hljs.highlightAll();</script>
+    <script>
+        fetch('/current').then(res => res.json()).then(data => {
+            const isNew = data.new;
+            const { deal } = data;
+
+            document.querySelector('.card #title').innerText = deal.title;
+            document.querySelector('.card #subtitle').innerText = deal.subtitle;
+            document.querySelector('.card #description').innerText = deal.description;
+
+            const a = document.querySelector('.card a');
+            a.href = deal.link;
+
+            const button = document.querySelector('.card button');
+            button.disabled = false;
+
+            const card = document.querySelector('.card');
+            card.classList.remove('loading');
+        })
+    </script>
+</body>
+</html>
