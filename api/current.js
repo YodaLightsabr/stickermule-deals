@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 export default async function find (req, res) {
     const supabase = createClient(process.env.DB_ENDPOINT, process.env.DB_KEY);
 
-    const html = await fetch('https://stickermule.com/deals').then(res => res.text());
+    const html = await fetch(req.query?.url ?? req.params?.url ?? 'https://stickermule.com/deals').then(res => res.text());
     const $ = cheerio.load(html);
 
     const id = $(`#mainContent > main > section > div.heroContent > div.actionWrapper > form`).attr('action').split('/').reverse()[1];
